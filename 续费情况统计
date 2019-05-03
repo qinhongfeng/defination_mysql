@@ -1,0 +1,22 @@
+-- 续费情况统计
+
+select 
+u.id '用户ID'
+,u.name 用户姓名
+,FROM_UNIXTIME(u.create_time) 注册时间
+,au.id 市场人员ID
+,au.name 市场人员姓名
+,au2.id 班主任ID
+,au2.name 班主任姓名
+,o.order_number 订单号
+,o.pay_price 支付金额
+,FROM_UNIXTIME(o.attach_pay_time) 支付时间
+,p.name 套餐名
+from ol_user u
+left join ol_admin_user au on u.cr_uid=au.id
+left join ol_admin_user au2 on u.cr_uid=au2.id
+left join ol_order o on u.id=o.user_id 
+left join ol_package p on o.package_id=p.id
+where au.role in (29,28,52,63,64)
+and o.attach_pay_time BETWEEN UNIX_TIMESTAMP('2019-04-25') and UNIX_TIMESTAMP('2019-05-01')
+and o.package_course_type=1
